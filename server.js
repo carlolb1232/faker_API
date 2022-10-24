@@ -30,14 +30,63 @@ class Empresa{
   }
 }
 
-app.get("/api/users/new", (req, res) => {
-  res.json(new Usuario());
+// ARREGLO PARA ALMACENAR A LOS USUARIOS 
+const users = [];
+// ARREGLO PARA ALMACENAR A LAS EMPRESAS 
+const companies = [];
+
+// CREAR USUARIO
+app.post("/api/users/new", (req, res) => {
+  const newUser = new Usuario();
+  users.push(newUser);
+  res.json(
+    {
+      message: "Nuevo usuario creado.", 
+      newUser,
+    }
+  );
 });
-app.get("/api/companies/new", (req, res) => {
-  res.json(new Empresa());
+// CREAR EMPRESA
+app.post("/api/companies/new", (req, res) => {
+  const newCompanie = new Empresa();
+  companies.push(newCompanie);
+  res.json(
+    {
+      message: "Nueva empresa creada", 
+      newCompanie,
+    }
+  );
 });
-app.get("/api/user/companies/new", (req, res) => {
-  res.json([new Empresa(), new Usuario()]);
+// CREAR EMPRESA Y USUARIO
+app.post("/api/user/companies/new", (req, res) => {
+  const newUser = new Usuario();
+  users.push(newUser);
+  const newCompanie = new Empresa();
+  companies.push(newCompanie);
+  res.json(
+    {
+      message:"Empresa y usuario creados", 
+      creaciones:[
+        {
+          message: "Empresa creada", 
+          newCompanie,
+        }, 
+        {
+          message:"Usuario creado", 
+          newUser,
+        }
+      ]
+    }
+  );
 });
+
+// OBTENER TODOS LOS USUARIOS
+app.get("/api/users", (req, res) =>{
+  res.json({Usuarios:users})
+})
+// OBTENER TODAS LA EMPRESAS
+app.get("/api/companies", (req, res) =>{
+  res.json({Empresas:companies})
+})
 
 app.listen(port, ()=>console.log(`Escuchando el puerto ${port}`))
